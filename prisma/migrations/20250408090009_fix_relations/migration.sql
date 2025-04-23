@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Order" ADD COLUMN     "paymentId" INTEGER,
+ALTER COLUMN "shipping" DROP NOT NULL,
+ALTER COLUMN "tax" DROP NOT NULL;
