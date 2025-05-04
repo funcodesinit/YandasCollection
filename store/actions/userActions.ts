@@ -8,19 +8,12 @@ export const fetchAccountProfile = ( userId:number, options={} ) => async (dispa
         type: ActionTypes.SET_PROFILE,
         payload: user?.data
     }) 
-}
- 
-export const getAccountProfile = (user) => {
-    return {
-        type: ActionTypes.SET_PROFILE,
-        payload: user
-    }
-}
+} 
 
-
-export const setCustomers = (customers) => {
-    return {
-        type: ActionTypes.SET_CUSTOMERS,
-        payload: customers
-    }
+export const fetchUsers = (options = {}) => async (dispatch) => { 
+    const userList = await account.listUsers(options); 
+    dispatch ({
+        type: ActionTypes.SET_USERS,
+        payload: userList?.data?.users
+    }) 
 }

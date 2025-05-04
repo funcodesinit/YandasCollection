@@ -1,23 +1,25 @@
 import { ActionTypes } from "../constants/action-types";
 
 export interface UserState {
-    account: UserType;
-    customers: UserListType[];
-    selected_customer: UserType;
+    profile: UserType | null;
+    users: UserListType[]; 
+    selected_user: UserType | null;
 } 
 
 const initialState: UserState = {
-    account: {},
-    customers: [],
-    selected_customer: {}
+    profile: null,
+    users: [],
+    selected_user: null,
 };
 
 export const accountReducer = (state = initialState, { type, payload }) => {
     switch (type) { 
         case ActionTypes.SET_PROFILE:
-            return { ...state, account: payload }; 
-        case ActionTypes.SET_CUSTOMERS:
-            return { ...state, customers: payload }; 
+            return { ...state, profile: payload }; 
+        case ActionTypes.SET_USERS:
+            return { ...state, users: payload }; 
+        case ActionTypes.SET_SELECTED_USER:
+            return { ...state, selected_user: payload }; 
         default:
             return state;
     } 

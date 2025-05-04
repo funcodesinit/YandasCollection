@@ -19,12 +19,7 @@ async function main() {
             lastName: 'Hatyoka',
             phoneNumber: '+260975550955',
             password: hashedCustomerPassword, // Make sure to hash in production!
-            role: 'CUSTOMER',
-            customerProfile: {
-                create: {
-                    address: 'Lusaka, Zambia',
-                },
-            },
+            role: 'CUSTOMER', 
         }
     });
 
@@ -41,12 +36,7 @@ async function main() {
             lastName: 'Banda',
             phoneNumber: '+260760851983',
             password: hashedStaffPassword, // Hash this in production
-            role: 'STAFF',
-            staffProfile: {
-                create: {
-                    position: 'Admin',
-                },
-            },
+            role: 'SUPER_ADMIN', 
         }
     });
 
