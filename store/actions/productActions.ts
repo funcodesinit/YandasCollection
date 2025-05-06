@@ -8,11 +8,11 @@ import category from "@/app/api/products/category";
 // redux thunk api calls 
 export const fetchPublicProductList = (options = {}) => async (dispatch) => {
     try {
-     
         const productsList = await list.getListing(options);
+        // console.log("productsList ===>", productsList?.data?.data)
         dispatch({
             type: ActionTypes.SET_PRODUCTS,
-            payload: productsList?.data
+            payload: productsList?.data?.data
         });
     } catch (error) {
         console.error("Error fetching product list:", error);
@@ -22,7 +22,6 @@ export const fetchPublicProductList = (options = {}) => async (dispatch) => {
         });
     }
 };
-
 
 export const fetchPublicProductDetails = (id) => async (dispatch) => {
     try {
@@ -41,7 +40,6 @@ export const fetchPublicProductDetails = (id) => async (dispatch) => {
     }
 };
 
- 
 export const fetchPublicCategoryList = () => async (dispatch) => {
     try {
         const prod = await category?.getListing();
@@ -74,8 +72,6 @@ export const fetchPublicSizesList = () => async (dispatch) => {
         });
     }
 };
-
-
 
 // redux calls ?//
 export const setProductCategory = (data) => {

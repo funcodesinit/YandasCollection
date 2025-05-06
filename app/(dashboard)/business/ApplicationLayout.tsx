@@ -1,3 +1,5 @@
+'use client'
+
 import { Avatar } from '@/components/avatar'
 import {
   Dropdown,
@@ -45,8 +47,12 @@ import {
   TicketIcon,
 } from '@heroicons/react/20/solid'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+
 
 export default function ApplicationLayout({ children }: { children: React.ReactNode }) {
+    let pathname = usePathname()
+  
   return (
     <SidebarLayout
       navbar={
@@ -100,7 +106,7 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
                 <MagnifyingGlassIcon />
                 <SidebarLabel>Search</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/business/staff">
+              <SidebarItem href="/business/staff" current={pathname === '/business/staff'}>
                 <InboxIcon />
                 <SidebarLabel>Staff Users</SidebarLabel>
               </SidebarItem>
@@ -108,11 +114,11 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
           </SidebarHeader>
           <SidebarBody>
             <SidebarSection>
-              <SidebarItem href="/business/customers">
+              <SidebarItem href="/business/customers" current={pathname === '/business/customers'}>
                 <UserIcon />
                 <SidebarLabel>Customers</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/events">
+              <SidebarItem href="/business/products" current={pathname === '/business/products'}>
                 <ClipboardDocumentIcon   />
                 <SidebarLabel>Products</SidebarLabel>
               </SidebarItem>
