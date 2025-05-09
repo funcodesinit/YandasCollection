@@ -58,7 +58,7 @@ export default function ProductsListComp() {
       <ul className="mt-10">
         {prod?.length === 0 || prod === undefined && (
             <TableRow className="h-24 text-start" colSpan={5}>
-                <TableCell className='text-lg text-pink-500 flex items-center flex-row gap-2'><span>No users found</span> <NoSymbolIcon className='size-4'/></TableCell>
+                <TableCell className='text-lg text-pink-500 flex items-center flex-row gap-2'><span>No products found</span> <NoSymbolIcon className='size-4'/></TableCell>
             </TableRow> )
         } 
         {prod?.map((event, index) => (
