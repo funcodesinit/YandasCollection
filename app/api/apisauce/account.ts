@@ -1,8 +1,22 @@
 import client from "../client"; 
 
+const listUsers = async (options = {}) => {
+    return client.get(
+      `/users`,
+      {
+        ...options,  
+        headers: {
+          Accept: "application/json"
+        }
+      }
+    );
+  };
+  
+ 
+
 const getAccount = async (id: any, options = {}) => {
     return client.get(
-        `/account/${id}`,
+        `/users/${id}`,
         {
             ...options,
             headers:{
@@ -12,6 +26,4 @@ const getAccount = async (id: any, options = {}) => {
     );
 }; 
 
-export default {
-    getAccount
-}
+export default { listUsers, getAccount }

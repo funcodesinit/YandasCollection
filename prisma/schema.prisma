@@ -50,18 +50,24 @@ model User {
   role          Role      @default(CUSTOMER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  address       String?
+  position      String?
+  company       String?
+  city          String?
+  country       String?   @default("Zambia")
+  province      String?
+  postalAdd     String?
+  //isActive    Boolean?
 
   // Relations
-  customerProfile CustomerProfile?
-  staffProfile    StaffProfile?
-  carts           Cart[]
+  accounts Account[]
+  sessions Session[]
+  carts    Cart[]
 
   Product   Product?  @relation(fields: [productId], references: [id])
   productId Int?
   Payment   Payment[]
-  Order     Order[]
+  order     Order[]
 }
 
 model VerificationToken {
@@ -71,21 +77,6 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
-}
-
-model CustomerProfile {
-  id      Int     @id @default(autoincrement())
-  userId  Int     @unique
-  address String?
-  orders  Order[]
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model StaffProfile {
-  id       Int     @id @default(autoincrement())
-  userId   Int     @unique
-  position String?
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Payment {
@@ -183,8 +174,8 @@ model Cart {
 }
 
 model Order {
-  id         Int @id @default(autoincrement())
-  customerId Int
+  id     Int @id @default(autoincrement())
+  userId Int
 
   email     String
   firstName String?
@@ -206,10 +197,7 @@ model Order {
   status          OrderStatus   @default(PENDING)
   paymentMethod   PaymentMethod @default(CREDITCARD)
   createdAt       DateTime      @default(now())
-  customer        User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
-
-  CustomerProfile   CustomerProfile? @relation(fields: [customerProfileId], references: [id])
-  customerProfileId Int?
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OrderItem {
@@ -224,14 +212,14 @@ model OrderItem {
 }
 
 model CartItem {
-  id             Int @id @default(autoincrement())
+  id             Int  @id @default(autoincrement())
   cartId         Int?
   productId      Int
   productImageId Int
   sizeId         Int
-  quantity       Int @default(1)
+  quantity       Int  @default(1)
 
-  cart         Cart?         @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cart         Cart?        @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
   size         ProductSize  @relation(fields: [sizeId], references: [id], onDelete: Cascade)
   productImage ProductImage @relation(fields: [productImageId], references: [id], onDelete: Cascade)
@@ -240,8 +228,10 @@ model CartItem {
 }
 
 enum Role {
-  STAFF
   CUSTOMER
+  STAFF
+  ADMIN
+  SUPER_ADMIN
 }
 
 enum OrderStatus {

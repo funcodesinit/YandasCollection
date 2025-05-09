@@ -262,7 +262,7 @@ export default function ProductsList() {
                   className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                 >
                   <div className="py-1">
-                    {sizes.map((option) => (
+                    {/* {sizes?.map((option) => (
                       <MenuItem key={option.size}>
                         <span
                           onClick={()=>handleFilterSiz(option.size)}
@@ -271,10 +271,10 @@ export default function ProductsList() {
                             'block px-4 py-2 text-sm data-focus:bg-gray-100 data-focus:outline-hidden',
                           )}
                         >
-                          {option.size}
+                          {option?.size}
                         </span>
                       </MenuItem>
-                    ))}
+                    ))} */}
                   </div>
                 </MenuItems>
               </Menu>

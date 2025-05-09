@@ -1,4 +1,4 @@
- 
+// Prisma schema file
 
 generator client {
   provider = "prisma-client-js"
@@ -11,7 +11,7 @@ datasource db {
 
 model Account {
   id                Int     @id @default(autoincrement())
-  userId            Int // Removed @map("id")
+  userId            Int     @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -57,6 +57,11 @@ model User {
   customerProfile CustomerProfile?
   staffProfile    StaffProfile?
   carts           Cart[]
+
+  Product   Product?  @relation(fields: [productId], references: [id])
+  productId Int?
+  Payment   Payment[]
+  Order     Order[]
 }
 
 model VerificationToken {
@@ -73,30 +78,25 @@ model CustomerProfile {
   userId  Int     @unique
   address String?
   orders  Order[]
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model StaffProfile {
   id       Int     @id @default(autoincrement())
   userId   Int     @unique
   position String?
-  user     User    @relation(fields: [userId], references: [id])
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Order {
-  id              Int             @id @default(autoincrement())
-  product         String
-  quantity        Int
-  price           Float
-  customerId      Int
-  status          OrderStatus     @default(PENDING)
-  returnRequested Boolean         @default(false)
-  createdAt       DateTime        @default(now())
-  customer        CustomerProfile @relation(fields: [customerId], references: [id])
+model Payment {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  amount Float  @default(0)
+  charge Float? @default(0.00)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-
-//category 
 model Category {
   id       Int       @id @default(autoincrement())
   name     String
@@ -104,81 +104,72 @@ model Category {
 }
 
 model ProductRating {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  productId  Int
-  review     String?
-  rate       Float
-
-  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  productId Int
+  review    String?
+  rate      Float
+  Product   Product @relation(fields: [productId], references: [id])
 }
 
-
-//add category and isPublished
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
   price       Float
   stock       Int      @default(0)
-  rating      Float?      @default(0)
+  rating      Float?   @default(0)
   discount    Int?     @default(0)
-  isPub       Boolean  @default(false)
+  isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  ratings     ProductRating[]
-  favourite   User[]
-  cartItems   CartItem[]
-  images      ProductImage[]
+  ratings   ProductRating[]
+  favourite User[]
+  cartItems CartItem[]
+  images    ProductImage[]
 
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
 
-
-
 model ProductImage {
-  id         Int    @id @default(autoincrement())
-  productId  Int
-  sizeId     Int // Foreign key to ProductSize
-  colorCode  String
-  name       String
-  image1     String
-  image2     String
-  image3     String
-  image4     String
-    
-  stock      ProductStock[]
+  id        Int     @id @default(autoincrement())
+  productId Int
+  colorCode String
+  name      String
+  media     Media[]
 
-  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  size       ProductSize @relation("ProductImageToSize", fields: [sizeId], references: [id], onDelete: Cascade) // Named relation for size
-  CartItem   CartItem?   @relation(fields: [cartItemId], references: [id])
-  cartItemId Int?
+  stock ProductStock[]
+
+  product  Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  CartItem CartItem[]
+}
+
+model Media {
+  id             Int          @id @default(autoincrement())
+  url            String
+  productImageId Int
+  productImage   ProductImage @relation(fields: [productImageId], references: [id])
 }
 
 model ProductStock {
+  id             Int @id @default(autoincrement())
+  stock          Int @default(1)
+  sizeId         Int
+  productImageId Int
 
-  id              Int            @id @default(autoincrement())
-  stock           Int            @default(1)
-  productImageId  Int
-  sizeId          Int?
-
-  size            ProductSize?   @relation(fields: [sizeId], references: [id])
-  ProductImage    ProductImage   @relation(fields: [productImageId], references: [id], onDelete: Cascade)
-
+  ProductImage ProductImage @relation(fields: [productImageId], references: [id])
+  size         ProductSize  @relation(fields: [sizeId], references: [id], onDelete: Cascade)
 }
 
 model ProductSize {
   id    Int     @id @default(autoincrement())
   size  String
   range String?
-  productStockId Int?
 
-  ProductStock  ProductStock @relation(fields: [productStockId], references: [id])
-  productImages ProductImage[] @relation("ProductImageToSize") // Match the relation name here
+  stock    ProductStock[]
+  CartItem CartItem[]
 }
 
 model Cart {
@@ -187,20 +178,65 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user  User       @relation(fields: [userId], references: [id])
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items CartItem[]
 }
 
+model Order {
+  id         Int @id @default(autoincrement())
+  customerId Int
+
+  email     String
+  firstName String?
+  lastName  String?
+  address   String
+  company   String?
+  city      String
+  country   String
+  province  String
+  postalAdd String
+  phone     String
+
+  shipping   Float?
+  tax        Int?
+  total      Float
+  orderItems OrderItem[]
+
+  returnRequested Boolean       @default(false)
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod @default(CREDITCARD)
+  createdAt       DateTime      @default(now())
+  customer        User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  CustomerProfile   CustomerProfile? @relation(fields: [customerProfileId], references: [id])
+  customerProfileId Int?
+}
+
+model OrderItem {
+  id         Int @id @default(autoincrement())
+  orderId    Int
+  cartItemId Int
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  cartItem CartItem @relation(fields: [cartItemId], references: [id], onDelete: Cascade)
+
+  @@unique([orderId, cartItemId]) // prevents duplicate entries
+}
+
 model CartItem {
-  id        Int @id @default(autoincrement())
-  cartId    Int
-  productId Int
-  quantity  Int @default(1)
+  id             Int @id @default(autoincrement())
+  cartId         Int?
+  productId      Int
+  productImageId Int
+  sizeId         Int
+  quantity       Int @default(1)
 
-  productImages ProductImage[]
+  cart         Cart?         @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size         ProductSize  @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  productImage ProductImage @relation(fields: [productImageId], references: [id], onDelete: Cascade)
 
-  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  OrderItem OrderItem[]
 }
 
 enum Role {
@@ -214,4 +250,19 @@ enum OrderStatus {
   DELIVERED
   RETURNED
   CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDITCARD
+  AIRTELMONEY
+  MTNMONEY
+  PAYPAL
+  OTHER
 }

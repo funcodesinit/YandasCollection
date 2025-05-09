@@ -69,5 +69,5 @@ export const cartReducer = (state = initialState,  action: Action) => {
 }
 
 const calculateTotal = (items) => {
-    return items.reduce((total, item) => total + item.quantity * item.product.price, 0);
+    return items?.reduce((total, item) => total + item.quantity * item.product.price, 0);
 };

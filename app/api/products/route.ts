@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    console.log('about to save @POST api/products',)
+    // console.log('about to save @POST api/products',)
     const processedInput = {
       name,
       description,
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       },
       // end images         
     }
-    console.log('[POST /api/products] Processed input:', processedInput);
+    // console.log('[POST /api/products] Processed input:', processedInput);
     // Save product to the database
     const product = await prisma.product.create({
       data: processedInput
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     }, { status: 201 });
 
   } catch (error: any) {
-    console.log("Error at POST /api/products:", error);
+    // console.log("Error at POST /api/products:", error);
     return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
   }
 
