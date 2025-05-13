@@ -1,4 +1,5 @@
 'use client'
+import LoadingComp from '@/components/app/LoadingComp'
 import { Button } from '@/components/button'
 import { Checkbox, CheckboxField } from '@/components/checkbox'
 import { Divider } from '@/components/divider'
@@ -10,34 +11,44 @@ import { Text } from '@/components/text'
 import { Textarea } from '@/components/textarea'
 import { useAppContext } from '@/context/AppProvider'
 import { RootState } from '@/store'
-import { fetchPublicCategoryList } from '@/store/actions/productActions'
+import { fetchPublicCategoryList, fetchPublicProductDetails } from '@/store/actions/productActions'
 import { ErrorMessage, Field, Formik } from 'formik'
 import { useRouter } from 'next/navigation'
- 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup';
 
-export default function CreateProdFormComp() {
+export default function DetailsProdFormComp({ id }: { id: number }) {
 
   const {  setAppAlert } = useAppContext();
+
+  const [loading, setLoading] = useState(true);
+  
   const router = useRouter()
+
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(fetchPublicCategoryList())
   }, [])
 
+  useEffect(() => {
+    dispatch(fetchPublicProductDetails(id)).finally(() => setLoading(false));
+    
+  }, [id])
+
 
   const category = useSelector((state: RootState) => state.products.category)
+  const product = useSelector((state: RootState) => state.products.selected_product)
 
 
   const initialValues = {
-    name: '',
-    price: '',
-    discount: '',
-    description: '',
-    stock: '1',
-    categoryId: '',
+    name: product.name || 'test',
+    price: product.price || '',
+    discount: product.discount || '',
+    description: product.description || '',
+    stock: product.stock || '1',  
+    categoryId: product.categoryId || '',
     // category: [],
   }
 
@@ -54,7 +65,7 @@ export default function CreateProdFormComp() {
   const handleSubmit = (values: typeof initialValues) => {
     // console.log('Form Submitted:', values)
     // dispatch action or make API call here
-    const Method = 'POST'
+    const Method = 'PATCH'
     const url = '/api/products'
     const body = {
       name: values.name,
@@ -92,7 +103,9 @@ export default function CreateProdFormComp() {
       router.push('/business/products')
   }
 
+  if(loading) return <LoadingComp />
 
+  console.log('--------------', product)
 
   return <Formik initialValues={initialValues}
     validationSchema={validationSchema}
@@ -103,6 +116,7 @@ export default function CreateProdFormComp() {
       <form method="post" onSubmit={handleSubmit}  className="mx-auto max-w-4xl">
         <Heading>Create Product</Heading>
         <Divider className="my-10 mt-6" />
+        {/* Product cate */}
 
         <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
           <div className="space-y-1">
@@ -132,7 +146,7 @@ export default function CreateProdFormComp() {
             <Text>This will be displayed on your public profile.</Text>
           </div>
           <div>
-            <Field as={Input} name="name" placeholder="Product Name" />
+            <Field as={Input} name="name"   placeholder="Product Name" />
             <ErrorMessage name="name" component="div" className="text-red-500" />
           </div>
         </section>

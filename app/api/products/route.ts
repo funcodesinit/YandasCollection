@@ -17,7 +17,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      name, description, price, discount, stock, isPub, categoryId, images
+      name, description, price, discount, stock, isPub, categoryId, 
+      // images
     } = body
 
     if (!body || Object.keys(body).length === 0) {
@@ -25,25 +26,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }
     // Upload images to Cloudinary
-    const imagesWithUrls = await Promise.all(
-      images.map(async (img: any) => {
-        const uploadedMedia = await Promise.all(
-          img.media.map(async (mediaBase64: string) => {
-            const uploadResponse = await cloudinary.uploader.upload(mediaBase64, {
-              folder: "products",
-            });
-            return uploadResponse.secure_url;
-          })
-        );
+    // const imagesWithUrls = await Promise.all(
+    //   images.map(async (img: any) => {
+    //     const uploadedMedia = await Promise.all(
+    //       img.media.map(async (mediaBase64: string) => {
+    //         const uploadResponse = await cloudinary.uploader.upload(mediaBase64, {
+    //           folder: "products",
+    //         });
+    //         return uploadResponse.secure_url;
+    //       })
+    //     );
 
-        return {
-          colorCode: img.colorCode,
-          name: img.name,
-          mediaUrls: uploadedMedia,
-          stock: img.stock,
-        };
-      })
-    );
+    //     return {
+    //       colorCode: img.colorCode,
+    //       name: img.name,
+    //       mediaUrls: uploadedMedia,
+    //       stock: img.stock,
+    //     };
+    //   })
+    // );
 
     // console.log('about to save @POST api/products',)
     const processedInput = {
@@ -53,23 +54,21 @@ export async function POST(req: NextRequest) {
       discount: parseFloat(discount),
       stock: parseInt(stock),
       isPublished: isPub,
-      category: { connect: { id: parseFloat(categoryId) } },
-      images: {
-        create: imagesWithUrls.map((img) => ({
-          colorCode: img?.colorCode,
-          name: img?.name,
-          media: img.mediaUrls?.length ? { create: img.mediaUrls.map((url: string) => ({ url })) } : undefined,
-          stock: img.stock?.length ? {
-            create: img.stock.map((stockItem: any) => ({
-              stock: parseInt(stockItem.stock),
-              size: { connect: { id: parseInt(stockItem.sizeId) } },
-            }))
-          }
-            : undefined
-
-
-        })),
-      },
+      category: { connect: { id: parseInt(categoryId) } },
+      // images: {
+      //   create: imagesWithUrls.map((img) => ({
+      //     colorCode: img?.colorCode,
+      //     name: img?.name,
+      //     media: img.mediaUrls?.length ? { create: img.mediaUrls.map((url: string) => ({ url })) } : undefined,
+      //     stock: img.stock?.length ? {
+      //       create: img.stock.map((stockItem: any) => ({
+      //         stock: parseInt(stockItem.stock),
+      //         size: { connect: { id: parseInt(stockItem.sizeId) } },
+      //       }))
+      //     }
+      //       : undefined
+      //   })),
+      // },
       // end images         
     }
     // console.log('[POST /api/products] Processed input:', processedInput);
@@ -92,12 +91,12 @@ export async function POST(req: NextRequest) {
 
 }
 
-
-
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id, name, description, price, discount, stock, isPub, categoryId, images } = body;
+    const { id, name, description, price, discount, stock, isPub, categoryId, 
+      // images
+     } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
@@ -130,25 +129,25 @@ export async function PATCH(req: NextRequest) {
     });
 
     // Upload new images to Cloudinary and process them
-    const imagesWithUrls = await Promise.all(
-      images.map(async (img: any) => {
-        const uploadedMediaUrls = await Promise.all(
-          img.media.map(async (mediaBase64: string) => {
-            const uploadRes = await cloudinary.v2.uploader.upload(mediaBase64, {
-              folder: "products",
-            });
-            return uploadRes.secure_url;
-          })
-        );
+    // const imagesWithUrls = await Promise.all(
+    //   images.map(async (img: any) => {
+    //     const uploadedMediaUrls = await Promise.all(
+    //       img.media.map(async (mediaBase64: string) => {
+    //         const uploadRes = await cloudinary.v2.uploader.upload(mediaBase64, {
+    //           folder: "products",
+    //         });
+    //         return uploadRes.secure_url;
+    //       })
+    //     );
 
-        return {
-          colorCode: img.colorCode,
-          name: img.name,
-          mediaUrls: uploadedMediaUrls,
-          stock: img.stock,
-        };
-      })
-    );
+    //     return {
+    //       colorCode: img.colorCode,
+    //       name: img.name,
+    //       mediaUrls: uploadedMediaUrls,
+    //       stock: img.stock,
+    //     };
+    //   })
+    // );
 
 
     const processedInput = {
@@ -159,21 +158,21 @@ export async function PATCH(req: NextRequest) {
       stock: parseInt(stock),
       isPublished: isPub,
       category: { connect: { id: parseFloat(categoryId) } },
-      images: {
-        create: imagesWithUrls.map((img) => ({
-          colorCode: img?.colorCode,
-          name: img?.name,
-          media: img.mediaUrls?.length ? { create: img.mediaUrls.map((url: string) => ({ url })) } : undefined,
-          stock: img.stock?.length ? {
-            create: img.stock.map((stockItem: any) => ({
-              stock: parseInt(stockItem.stock),
-              size: { connect: { id: parseInt(stockItem.sizeId) } },
-            }))
-          }
-            : undefined
+      // images: {
+      //   create: imagesWithUrls.map((img) => ({
+      //     colorCode: img?.colorCode,
+      //     name: img?.name,
+      //     media: img.mediaUrls?.length ? { create: img.mediaUrls.map((url: string) => ({ url })) } : undefined,
+      //     stock: img.stock?.length ? {
+      //       create: img.stock.map((stockItem: any) => ({
+      //         stock: parseInt(stockItem.stock),
+      //         size: { connect: { id: parseInt(stockItem.sizeId) } },
+      //       }))
+      //     }
+      //       : undefined
  
-        })),
-      },
+      //   })),
+      // },
       // end images         
     }
 
@@ -181,32 +180,7 @@ export async function PATCH(req: NextRequest) {
     const updatedProduct = await prisma.product.update({
       where: { id: parseInt(id) },
       data: processedInput
-      // {
-      //   name,
-      //   description,
-      //   price: parseFloat(price),
-      //   discount: parseFloat(discount),
-      //   stock: parseInt(stock),
-      //   isPublished: isPub,
-      //   category: { connect: { id: parseInt(categoryId) } },
-      //   images: {
-      //     create: imagesWithUrls.map(img => ({
-      //       colorCode: img.colorCode,
-      //       name: img.name,
-      //       media: {
-      //         create: img.mediaUrls.map((url: string) => ({ url })),
-      //       },
-      //       stock: img.stock?.length
-      //         ? {
-      //             create: img.stock.map((s: any) => ({
-      //               stock: parseInt(s.stock),
-      //               size: { connect: { id: parseInt(s.sizeId) } },
-      //             })),
-      //           }
-      //         : undefined,
-      //     })),
-      //   },
-      // },
+ 
     });
 
     return NextResponse.json({ success: true, product: updatedProduct }, { status: 200 });
