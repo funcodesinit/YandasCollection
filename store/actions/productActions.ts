@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { ActionTypes } from "../constants/action-types"
 import list from "@/app/api/products/list";
 import sizes from "@/app/api/products/sizes";
-import category from "@/app/api/products/category";
+import category from "@/app/api/apisauce/category";
 
 
 // redux thunk api calls 

@@ -122,18 +122,19 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
                 <ClipboardDocumentIcon   />
                 <SidebarLabel>Products</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/orders">
+              <SidebarItem href="/business/stock" current={pathname ==='/business/stock'}>
+                <InboxStackIcon />
+                <SidebarLabel>Media & Stock</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem href="/business/orders" current={pathname === '/business/orders'}>
                 <TicketIcon />
                 <SidebarLabel>Orders</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/settings">
+              <SidebarItem href="/business/payments" current={pathname === '/business/payments'}>
                 <CreditCardIcon />
                 <SidebarLabel>Payment</SidebarLabel>
               </SidebarItem>
-              <SidebarItem href="/broadcasts">
-                <InboxStackIcon />
-                <SidebarLabel>Stock</SidebarLabel>
-              </SidebarItem>
+             
             </SidebarSection>
             <SidebarSection className="max-lg:hidden">
               <SidebarHeading>Quick Reports</SidebarHeading>

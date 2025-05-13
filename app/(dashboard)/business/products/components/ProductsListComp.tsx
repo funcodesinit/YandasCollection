@@ -11,7 +11,7 @@ import { Link } from '@/components/link'
 import { Select } from '@/components/select'
 import { TableCell, TableRow } from '@/components/table'
 import { RootState } from '@/store'
-import { fetchPublicProductList } from '@/store/actions/productActions'
+import { fetchPublicCategoryList, fetchPublicProductList } from '@/store/actions/productActions'
 import { EllipsisVerticalIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid'
 import { NoSymbolIcon } from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
@@ -20,14 +20,16 @@ import { useDispatch, useSelector } from 'react-redux'
 
 export default function ProductsListComp() {
     const [loading, setLoading] = useState(true)
-    const prod = useSelector((state:RootState)=>state.products.products)
-
+    
     const dispatch = useDispatch()
-
+    
     useEffect(() => {
-        dispatch(fetchPublicProductList()).then(()=>setLoading(false))
+      dispatch(fetchPublicCategoryList())
+      dispatch(fetchPublicProductList()).then(()=>setLoading(false))
     }, [dispatch])
     
+    const prod = useSelector((state:RootState)=>state.products.products)
+   
     if(loading) return <LoadingComp />
 
   return (
@@ -39,7 +41,7 @@ export default function ProductsListComp() {
             <div className="flex-1">
               <InputGroup>
                 <MagnifyingGlassIcon />
-                <Input name="search" placeholder="Search events&hellip;" />
+                <Input name="search" placeholder="Search products&hellip;" />
               </InputGroup>
             </div>
             <div>
@@ -56,47 +58,42 @@ export default function ProductsListComp() {
         </a>
       </div>
       <ul className="mt-10">
-        {prod?.length === 0 || prod === undefined && (
+        {prod?.length < 1 && (
             <TableRow className="h-24 text-start" colSpan={5}>
                 <TableCell className='text-lg text-pink-500 flex items-center flex-row gap-2'><span>No products found</span> <NoSymbolIcon className='size-4'/></TableCell>
             </TableRow> )
         } 
-        {prod?.map((event, index) => (
-          <li key={event.id}>
+        {prod?.map((product, index) => (
+          <li key={product.id}>
             <Divider soft={index > 0} />
             <div className="flex items-center justify-between">
-              <div key={event.id} className="flex gap-6 py-6">
+              <div key={product.id} className="flex gap-6 py-6">
                 <div className="w-32 shrink-0">
-                  <Link href={event.url} aria-hidden="true">
-                    <img className="aspect-3/2 rounded-lg shadow-sm" src={event.imgUrl} alt="" />
-                  </Link>
+                  {/* <Link href={product?.url} aria-hidden="true">
+                    <img className="aspect-3/2 rounded-lg shadow-sm" src={product.imgUrl} alt="" />
+                  </Link> */}
                 </div>
                 <div className="space-y-1.5">
                   <div className="text-base/6 font-semibold">
-                    <Link href={event.url}>{event.name}</Link>
+                    <Link href={`/business/products/${product?.id}`}>{product.name}</Link>
                   </div>
                   <div className="text-xs/6 text-zinc-500">
-                    {event.date} at {event.time} <span aria-hidden="true">·</span> {event.location}
+                    ZMW {product?.price}  
                   </div>
                   <div className="text-xs/6 text-zinc-600">
-                    {event.ticketsSold}/{event.ticketsAvailable} tickets sold
+                    {product?.createdAt}
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <Badge className="max-sm:hidden" color={event.status === 'On Sale' ? 'lime' : 'zinc'}>
-                  {event.status}
+                <Badge className="max-sm:hidden" color={!product?.isPub === 'On Sale' ? 'lime' : 'zinc'}>
+                  is public
                 </Badge>
-                <Dropdown>
-                  <DropdownButton plain aria-label="More options">
-                    <EllipsisVerticalIcon />
-                  </DropdownButton>
-                  <DropdownMenu anchor="bottom end">
-                    <DropdownItem href={event.url}>View</DropdownItem>
-                    <DropdownItem>Edit</DropdownItem>
-                    <DropdownItem>Delete</DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
+               
+                <Link href={`/business/products/${product?.id}`}>
+                View
+                </Link>
+                  
               </div>
             </div>
           </li>
