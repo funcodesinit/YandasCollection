@@ -53,7 +53,7 @@ export default function StockListComp() {
             </TableRow> )
         } 
           {products?.map((product) => (
-            <TableRow key={product?.id} href={product?.url} title={`product #${product?.id}`}>
+            <TableRow key={product?.id} href={`/business/stock/${product?.id}`} title={`product #${product?.id}`}>
               <TableCell>{product?.id}</TableCell>
               <TableCell className="text-zinc-500">{product?.name}</TableCell>
               <TableCell>{product?.stock}</TableCell>

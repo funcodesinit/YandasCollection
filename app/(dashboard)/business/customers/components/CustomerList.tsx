@@ -45,7 +45,7 @@ export default function CustomerListComp({roles, title}) {
             </TableRow> )
           }
           {users?.map((user) => (
-            <TableRow key={user?.id} href={user?.url} title={`Order #${user?.id}`}>
+            <TableRow key={user?.id} href={`/business/customers/${user?.id}`} title={`Order #${user?.id}`}>
               <TableCell>{user?.id}</TableCell>
               <TableCell className="text-zinc-500">{user?.firstName} {user?.lastName}</TableCell>
               <TableCell>{user?.email}</TableCell>
