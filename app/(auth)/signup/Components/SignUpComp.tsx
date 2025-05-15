@@ -10,8 +10,8 @@ import StandardSecureInput from "@/components/app/Form/PasswordInput";
 import app from "@/config/firebase";
 import { collection, doc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore";
 
-const auth = getAuth(app); // Initialize Firebase Auth
-const db = getFirestore(app);
+// const auth = getAuth(app); // Initialize Firebase Auth
+// const db = getFirestore(app);
 
 const CreateUserSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required."),

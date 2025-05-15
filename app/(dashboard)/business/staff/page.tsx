@@ -6,7 +6,7 @@ import { RootState } from '@/store'
 // import { getOrders } from '@/data'
 import type { Metadata } from 'next'
 import { useSelector } from 'react-redux'
-import CustomerListComp from '../customers/components/CustomerList'
+import CustomerListComp from '../Customers/components/CustomerList'
 
 export const metadata: Metadata = {
   title: 'Staff Users',

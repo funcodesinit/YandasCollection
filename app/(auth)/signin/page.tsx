@@ -1,8 +1,8 @@
 
 import { View, Text } from 'react-native'
 import React from 'react'
-import SignInComp from './Components/SignInComp'
 import { Metadata } from 'next';
+import SignInComp from './Components/SignInComp';
 
 export const metadata: Metadata = {
   title: "Sign-in Yandascollection",
