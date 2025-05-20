@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { RootState } from '@/store'
 import { fetchUsers } from '@/store/actions/userActions'
 import { NoSymbolIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
 import { useEffect } from 'react'
 // import { getOrders } from '@/data'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,7 +27,9 @@ export default function CustomerListComp({roles, title}) {
     <>
       <div className="flex items-end justify-between gap-4">
         <Heading>{title}</Heading>
-        <Button className="-my-0.5">Create New Staff user</Button>
+        <Link href={'/business/staff/create'} className="flex items-center gap-2">
+          <Button className="-my-0.5">Create New Staff user</Button>
+        </Link>
       </div>
       <Table className="mt-8 [--gutter:--spacing(6)] lg:[--gutter:--spacing(10)]">
         <TableHead>
