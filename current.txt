@@ -8,7 +8,4 @@
 // 3. npx prisma migrate reset
 // 4. npx prisma db seed
 
-
 //firebase google auth Public-facing name for project - [project-221358175785] Support email  -  [kevtheprogrammer16@gmail.com]
-
- 
