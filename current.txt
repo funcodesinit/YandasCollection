@@ -1,15 +1,11 @@
 // cmd:
-// npx prisma generate --clear-cache
-// npx prisma migrate dev --name init
-// npx prisma migrate reset
-// npx prisma init
-// npx prisma db push
-// npx prisma db seed
-// npx prisma migrate reset
-// npx prisma migrate dev --name fix-relations
-// npx prisma format
-
+// 0. npx prisma init
+// 1. npx prisma generate --clear-cache
+// -- npx prisma format --
+// 2. npx prisma db push 
+// 3. npx prisma migrate dev --name init
+// -- npx prisma migrate dev --name fix-relations 
+// 3. npx prisma migrate reset
+// 4. npx prisma db seed
 
 //firebase google auth Public-facing name for project - [project-221358175785] Support email  -  [kevtheprogrammer16@gmail.com]
-
- 

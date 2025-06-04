@@ -57,7 +57,8 @@ model User {
   country       String?   @default("Zambia")
   province      String?
   postalAdd     String?
-  //isActive    Boolean?
+  isActive    Boolean?
+  avatar    String?
 
   // Relations
   accounts Account[]
